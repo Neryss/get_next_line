@@ -1,3 +1,4 @@
-salut c'est moi
-je crois
-je suis pas sur
+read the stdin with the buffer
+store it in another buffer
+read line by line detecting the nl
+until ctrl c ?
