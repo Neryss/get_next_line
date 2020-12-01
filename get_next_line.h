@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:18 by ckurt             #+#    #+#             */
-/*   Updated: 2020/11/30 17:26:34 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/01 16:09:22 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ int		check_errors(int fd);
 int		ft_strlen(const char *s);
 void	ft_bzero(void *s, size_t n);
 void	ft_putstr_fd(char *str, int fd);
-char	*ft_strncat(char *dest, char *src, unsigned int nb);
-char	*str_realloc(char *str, size_t n);
+char				*ft_strcat(char *dest, char *src);
+void	*ft_calloc(size_t count, size_t size);
+char				*ft_strjoin(char const *s1, char const *s2);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	*ft_memchr(const void *s, int c, size_t n);
-
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 #endif
