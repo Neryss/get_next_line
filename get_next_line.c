@@ -6,13 +6,13 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/01 17:52:15 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/02 16:40:47 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+void				*ft_memchr(const void *s, int c, size_t n)
 {
 	unsigned char	*str;
 	unsigned char	uc;
@@ -30,37 +30,35 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	return (NULL);
 }
 
-void	ft_putstr_fd(char *str, int fd)
+void				ft_lstadd_back(t_save **lst, t_save *new)
 {
-	write(fd, str, ft_strlen(str));
-}
+	t_save			*fsave;
 
-void	free_tab(char **line)
-{
-	free(*line);
-	free(line);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		len;
-	int		i;
-	char	*str;
-
-	i = 0;
-	len = ft_strlen(s1);
-	if (!(str = malloc((sizeof(char) * (len + 1)))))
-		return (0);
-	while (i < len)
+	fsave = *lst;
+	if (!*lst)
+		*lst = new;
+	else
 	{
-		str[i] = s1[i];
-		i++;
+		while (fsave->next)
+			fsave = fsave->next;
+		fsave->next = new;
+		new->next = NULL;
 	}
-	str[i] = '\0';
-	return (str);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+t_save				*ft_lstnew_for_fd(void *content, int fd)
+{
+	t_save			*save;
+	
+	if (!(save = malloc(sizeof(t_save))))
+		return (NULL);
+	save->content = content;
+	save->fd = fd;
+	save->next = NULL;
+	return (save);
+}
+
+void				*ft_calloc(size_t count, size_t size)
 {
 	unsigned long	i;
 	char			*array;
@@ -72,22 +70,29 @@ void	*ft_calloc(size_t count, size_t size)
 	return (array);
 }
 
-int	get_next_line(int fd, char **line)
+int					get_next_line(int fd, char **line)
 {
-	char	*buffer;
-	int		i;
+	char			*buffer;
+	static t_save	*save;
 
-	i = 0;
 	if (!(buffer = ft_calloc(sizeof(char), BUFFER_SIZE)))
 		return (-1);
-	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+	if (!(*line = ft_calloc(sizeof(char), (BUFFER_SIZE + 1))))
 		return (-1);
+	save = ft_lstnew_for_fd(*line, fd);
+	if (save->fd != fd)
+		ft_lstadd_back(&save, ft_lstnew_for_fd(*line, fd));
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
+		// printf("yo\n");
 		*line = ft_strjoin(*line, buffer);
 		if (ft_memchr(buffer, '\n', BUFFER_SIZE))
+		{
+			save->content = ft_strjoin(save->content, *line);
 			return (1);
+		}
 		ft_bzero(buffer, BUFFER_SIZE);
 	}
+	*line = ft_strjoin(*line, save->content);
 	return (0);
 }
