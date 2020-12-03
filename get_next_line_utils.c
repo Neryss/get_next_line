@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:24 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/02 10:13:02 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/03 14:33:55 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,16 @@ char				*ft_strjoin(char const *s1, char const *s2)
 {
 	char			*fstr;
 	int				tlen;
+	int				i;
 
+	i = 0;
+	if (!s1)
+		return(ft_strdup(s2));
 	tlen = ft_strlen(s1) + ft_strlen(s2);
-	if (!(fstr = ft_calloc(tlen + 1, sizeof(char))))
+	if (!(fstr = malloc(sizeof(char) * (tlen + 1))))
 		return (NULL);
+	while (i < tlen)
+		fstr[i++] = 0;
 	fstr = ft_memcpy(fstr, s1, ft_strlen(s1));
 	fstr = ft_strcat(fstr, (char *)s2);
 	return (fstr);
@@ -65,13 +71,27 @@ int		ft_strlen(const char *s)
 	return (n);
 }
 
-void	ft_bzero(void *s, size_t n)
+void			*ft_memmove(void *dst, const void *src, size_t len)
 {
-	unsigned char	*str;
-	unsigned long	i;
+	int			i;
+	char		*bdst;
+	const char	*bsrc;
 
 	i = 0;
-	str = (unsigned char *)s;
-	while (i < n)
-		str[i++] = '\0';
+	bsrc = src;
+	bdst = dst;
+	if (!src && !dst)
+		return (NULL);
+	if (src > dst)
+	{
+		while ((unsigned long)i < len)
+		{
+			bdst[i] = bsrc[i];
+			i++;
+		}
+	}
+	else
+		while (len--)
+			bdst[len] = bsrc[len];
+	return (dst);
 }
