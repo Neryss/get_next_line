@@ -1,5 +1,1 @@
 line 1 : hello
-line 2 : ca va
-line 3 : veux mourir
-line 4 : ouiiiiiiii
-line 5 : ahahahahahah

@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/03 14:46:24 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/03 18:07:11 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,18 +115,19 @@ int			get_line(char *actual, char **line, int i)
 {
 	int len;
 	if (!(*line = malloc(sizeof(char) * (i + 1))))
-		return (0);
+		return (-1);
 	i++;
 	*line = ft_substr(actual, 0, i);
 	len = ft_strlen(actual + i) + 1;
 	ft_memmove(actual, actual + i, len);
+		printf("content durin = %s", *line);
 	return (1);
 }
 
 int get_next_line(int fd, char **line)
 {
 	char			*buffer;
-	static char		*save[10240];
+	static t_save	*save;
 	int				i;
 	int				rbytes;
 
@@ -134,20 +135,18 @@ int get_next_line(int fd, char **line)
 		return (-1);
 	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	if (save[fd] && ((i = get_ind(save[fd]) != 0)))
-		return (get_line(save[fd], line, i));
-	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
+	if (!save)
+		save = ft_lstnew_for_fd(NULL, fd);
+	while ((rbytes = read(fd, buffer, BUFFER_SIZE)))
 	{
 		buffer[rbytes] = 0;
-		save[fd] = ft_strjoin(save[fd], buffer);
-		if ((i = get_ind(save[fd])) != 0)
-			return(get_line(save[fd], line, i));
+		save->content = ft_strjoin(save->content, buffer);
+		if ((i = get_ind(save->content)) != 0)
+			return(get_line(save->content, line, i));
 	}
-	if (save[fd] && (*line = ft_strdup(save[fd])))
-	{
-		// free(buffer);
-		// free(save[fd]);
-	}
-	return (rbytes);
-	// *line = ft_strdup("");
+	*line = ft_strdup(save->content);
+	printf("content = %s", *line);
+	if (rbytes < 0)
+		return (-1);
+	return (0);
 }
