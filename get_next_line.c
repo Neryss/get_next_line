@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 11:11:13 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 13:23:06 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substr);
 }
 
-
-// void				*ft_calloc(size_t count, size_t size)
-// {
-// 	unsigned long	i;
-// 	char			*array;
-
-// 	i = 0;
-// 	if (!(array = (malloc(count * size))))
-// 		return (NULL);
-// 	ft_bzero(array, size * count);
-// 	return (array);
-// }
-
 int			get_ind(char *actual)
 {
 	int i;
@@ -113,7 +100,6 @@ int			get_line(char *actual, char **line, int i)
 	int len;
 	if (!(*line = malloc(sizeof(char) * (i + 1))))
 		return (-1);
-	i++;
 	*line = ft_substr(actual, 0, i);
 	len = ft_strlen(actual + i) + 1;
 	ft_memmove(actual, actual + i, len);
