@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 09:43:08 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 11:11:13 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,7 @@ int			get_ind(char *actual)
 	while(actual[i])
 	{
 		if (actual[i] == '\n')
-		{
-			// printf("i is %d", i);
 			return (i);
-		}
 		i++;
 	}
 	return (0);
@@ -120,7 +117,6 @@ int			get_line(char *actual, char **line, int i)
 	*line = ft_substr(actual, 0, i);
 	len = ft_strlen(actual + i) + 1;
 	ft_memmove(actual, actual + i, len);
-		// printf("content durin = %s", *line);
 	return (1);
 }
 
@@ -136,15 +132,22 @@ int get_next_line(int fd, char **line)
 	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
 	if (!save)
-		save = ft_lstnew_for_fd(NULL, fd);
-	while ((rbytes = read(fd, buffer, BUFFER_SIZE)))
+		save = ft_lstnew_for_fd(NULL, fd); 
+	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
-		printf("slf\n");
 		buffer[rbytes] = 0;
 		save->content = ft_strjoin(save->content, buffer);
+		// printf("save during = %s", save->content);
 		if ((i = get_ind(save->content)) != 0)
 			return(get_line(save->content, line, i));
 	}
-	printf("content = %s", save->content);
-	return (0);
+	// printf("save = %s", save->content);
+	if (save->content != NULL && (*line = ft_strdup(save->content)))
+	{
+		// printf("hihi = %s\n", *line);
+		save->content = NULL;
+		return (1);
+	}
+	// printf("line end = %s", *line);
+	return (rbytes);
 }
