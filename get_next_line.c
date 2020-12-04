@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 14:05:04 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 14:44:29 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 
 
-void ft_lstadd_back(t_save **lst, t_save *new)
+void				ft_lstadd_back(t_save **lst, t_save *new)
 {
-	t_save *fsave;
+	t_save			*fsave;
 
 	fsave = *lst;
 	if (!*lst)
@@ -30,9 +30,9 @@ void ft_lstadd_back(t_save **lst, t_save *new)
 	}
 }
 
-t_save *ft_lstnew_for_fd(void *content, int fd)
+t_save				*ft_lstnew_for_fd(void *content, int fd)
 {
-	t_save *save;
+	t_save			*save;
 
 	if (!(save = malloc(sizeof(t_save))))
 		return (NULL);
@@ -42,11 +42,11 @@ t_save *ft_lstnew_for_fd(void *content, int fd)
 	return (save);
 }
 
-char	*ft_strdup(const char *s1)
+char				*ft_strdup(const char *s1)
 {
-	int		len;
-	int		i;
-	char	*str;
+	int				len;
+	int				i;
+	char			*str;
 
 	i = 0;
 	len = ft_strlen(s1);
@@ -61,7 +61,7 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char				*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	unsigned int	i;
 	unsigned long	temp;
@@ -109,7 +109,8 @@ int			get_line(char *actual, char **line, int i)
 int get_next_line(int fd, char **line)
 {
 	char			*buffer;
-	static t_save	*save;
+	// static t_save	*save;
+	static	char	*csave[10240];
 	int				i;
 	int				rbytes;
 
@@ -117,21 +118,19 @@ int get_next_line(int fd, char **line)
 		return (-1);
 	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	if (!save)
-		save = ft_lstnew_for_fd(NULL, fd); 
+	// if (!save || save->fd != fd)
+	// 	ft_lstadd_back(&save, ft_lstnew_for_fd(NULL, fd));
 	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[rbytes] = 0;
-		save->content = ft_strjoin(save->content, buffer);
-		// printf("save during = %s", save->content);
-		if ((i = get_ind(save->content)) != 0)
-			return(get_line(save->content, line, i));
+		csave[fd] = ft_strjoin(csave[fd], buffer);
+		if ((i = get_ind(csave[fd])) != 0)
+			return(get_line(csave[fd], line, i));
 	}
-	// printf("save = %s", save->content);
-	if (save->content != NULL && (*line = ft_strdup(save->content)))
+	if (csave[fd] != NULL && (*line = ft_strdup(csave[fd])))
 	{
-		// printf("hihi = %s\n", *line);
-		save->content = NULL;
+		csave[fd] = NULL;
+		free(csave[fd]);
 		return (1);
 	}
 	return (rbytes);
