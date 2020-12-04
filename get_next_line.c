@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 14:44:29 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 14:54:07 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,6 @@ int get_next_line(int fd, char **line)
 		return (-1);
 	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	// if (!save || save->fd != fd)
-	// 	ft_lstadd_back(&save, ft_lstnew_for_fd(NULL, fd));
 	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[rbytes] = 0;
@@ -131,7 +129,9 @@ int get_next_line(int fd, char **line)
 	{
 		csave[fd] = NULL;
 		free(csave[fd]);
+		free(buffer);
 		return (1);
 	}
+	*line = ft_strdup("");
 	return (rbytes);
 }

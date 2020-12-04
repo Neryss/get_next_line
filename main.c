@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 19:54:28 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 13:58:35 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 14:53:08 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ int main(void)
 	fd = open("random.txt", O_RDONLY);
 	while((r = get_next_line(fd, &line)) > 0)
 	{
+		printf("\n%d", r);
 		printf("%s", line);
 		free(line);
 	}
+	printf("%d", r);
 	return (0);
 }
