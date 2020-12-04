@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:24 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 13:01:00 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 16:16:27 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int		ft_strlen(const char *s)
 	int n;
 
 	n = 0;
+	if (!s)
+		return (0);
 	while (s[n])
 		n++;
 	return (n);

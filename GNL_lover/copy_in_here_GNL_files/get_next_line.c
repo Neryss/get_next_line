@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 14:46:11 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 14:57:19 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,9 @@ int get_next_line(int fd, char **line)
 	{
 		csave[fd] = NULL;
 		free(csave[fd]);
+		free(buffer);
 		return (1);
 	}
+	*line = ft_strdup("");
 	return (rbytes);
 }

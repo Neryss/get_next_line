@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 19:54:28 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 14:53:08 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 16:05:48 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int main(void)
 		printf("%s", line);
 		free(line);
 	}
-	printf("%d", r);
+	printf("%d\n", r);
+	printf("%s", line);
 	return (0);
 }

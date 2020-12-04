@@ -6,41 +6,11 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 14:54:07 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 16:23:25 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-
-
-void				ft_lstadd_back(t_save **lst, t_save *new)
-{
-	t_save			*fsave;
-
-	fsave = *lst;
-	if (!*lst)
-		*lst = new;
-	else
-	{
-		while (fsave->next)
-			fsave = fsave->next;
-		fsave->next = new;
-		new->next = NULL;
-	}
-}
-
-t_save				*ft_lstnew_for_fd(void *content, int fd)
-{
-	t_save			*save;
-
-	if (!(save = malloc(sizeof(t_save))))
-		return (NULL);
-	save->content = content;
-	save->fd = fd;
-	save->next = NULL;
-	return (save);
-}
 
 char				*ft_strdup(const char *s1)
 {
@@ -116,8 +86,8 @@ int get_next_line(int fd, char **line)
 
 	if (!(buffer = malloc(sizeof(char) * BUFFER_SIZE)))
 		return (-1);
-	if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-		return (-1);
+	// if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+	// 	return (-1);
 	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[rbytes] = 0;
@@ -125,7 +95,10 @@ int get_next_line(int fd, char **line)
 		if ((i = get_ind(csave[fd])) != 0)
 			return(get_line(csave[fd], line, i));
 	}
-	if (csave[fd] != NULL && (*line = ft_strdup(csave[fd])))
+	*line = ft_strdup(csave[fd]);
+	if (i == 0 && *line)
+		return (0);
+	if (csave[fd] != NULL && !*line)
 	{
 		csave[fd] = NULL;
 		free(csave[fd]);
