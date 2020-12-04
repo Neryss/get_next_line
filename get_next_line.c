@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/03 18:07:11 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/04 09:43:08 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int			get_line(char *actual, char **line, int i)
 	*line = ft_substr(actual, 0, i);
 	len = ft_strlen(actual + i) + 1;
 	ft_memmove(actual, actual + i, len);
-		printf("content durin = %s", *line);
+		// printf("content durin = %s", *line);
 	return (1);
 }
 
@@ -139,14 +139,12 @@ int get_next_line(int fd, char **line)
 		save = ft_lstnew_for_fd(NULL, fd);
 	while ((rbytes = read(fd, buffer, BUFFER_SIZE)))
 	{
+		printf("slf\n");
 		buffer[rbytes] = 0;
 		save->content = ft_strjoin(save->content, buffer);
 		if ((i = get_ind(save->content)) != 0)
 			return(get_line(save->content, line, i));
 	}
-	*line = ft_strdup(save->content);
-	printf("content = %s", *line);
-	if (rbytes < 0)
-		return (-1);
+	printf("content = %s", save->content);
 	return (0);
 }
