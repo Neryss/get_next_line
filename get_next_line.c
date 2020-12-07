@@ -6,105 +6,85 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/07 16:46:54 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 20:33:36 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char				*ft_strdup(const char *s1)
+char	*fetch_line(char *str)
 {
-	int				len;
-	int				i;
-	char			*str;
+	int		i;
+	char	*res;
 
 	i = 0;
-	len = ft_strlen(s1);
-	if (!(str = malloc((sizeof(char) * (len + 1)))))
-		return (0);
-	while (i < len)
+	if (!str)
+		return (NULL);
+	while (str[i] && str[i] != 10)
+		i++;
+	if (!(res = malloc(sizeof(char) * (i + 1))))
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i] != 10)
 	{
-		str[i] = s1[i];
+		res[i] = str[i];
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	res[i] = 0;
+	return (res);
 }
 
-char				*ft_substr(char const *s, unsigned int start, size_t len)
+char	*fetch_save(char *save)
 {
-	unsigned int	i;
-	unsigned long	temp;
-	char			*substr;
+	char	*res;
+	int		i;
+	int		j;
 
 	i = 0;
-	temp = 0;
-	if (!s || !(substr = malloc(sizeof(char) * (len + 1))))
-		return (0);
-	while (s[i] && temp < len)
-	{
-		if (i >= start)
-			substr[temp++] = s[i];
+	j = 0;
+	if (!save)
+		return (NULL);
+	while (save[i] && save[i] != 10)
 		i++;
-	}
-	substr[temp] = 0;
-	return (substr);
-}
-
-int			get_ind(char *actual)
-{
-	int i;
-
-	i = 0;
-	while(actual[i])
+	if (!save[i])
 	{
-		if (actual[i] == '\n')
-			return (i);
-		i++;
+		free(save);
+		return (NULL);
 	}
-	return (-1);
-}
-
-int			get_line(char *actual, char **line, int i)
-{
-	int len;
-	if (!(*line = malloc(sizeof(char) * (i + 1))))
-		return (-1);
-	*line = ft_substr(actual, 0, i);
+	if (!(res = malloc(sizeof(char) * ((ft_strlen(save) - i) + 1))))
+		return (NULL);
 	i++;
-	len = ft_strlen(actual + i) + 1;
-	ft_memmove(actual, actual + i, len);
-	return (1);
+	while (save[i])
+		res[j++] = save[i++];
+	res[j] = 0;
+	free(save);
+	return (res);
 }
 
-// ssize_t	read_wrapper(int fd, char *buf, size_t len)
-// {
-// 	printf("read was called!\n");
-
-// 	return read(fd, buf, len);
-// }
-
-int get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	char			*buffer;
-	static	char	*csave[10240];
-	int				i;
-	int				rbytes;
+	char		*buffer;
+	static char	*save[10240];
+	int			readvalue;
 
-	if (!(buffer = malloc(sizeof(char) * BUFFER_SIZE)))
+	readvalue = 1;
+	if (fd < 0 || !line || BUFFER_SIZE < 1 ||
+		!(buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	if (BUFFER_SIZE <= 0 || fd < 0)
-		return (-1);
-	buffer[0] = 0;
-	while (!csave[fd] || (i = get_ind(csave[fd])) != -1)
+	while (readvalue != 0 && !ft_strchr(save[fd], 10))
 	{
-		rbytes = read(fd, buffer, BUFFER_SIZE);
-		csave[fd] = ft_strjoin(csave[fd], buffer);
-		if (rbytes <= 0)
-			return (rbytes);
-		buffer[rbytes] = 0;
+		if ((readvalue = read(fd, buffer, BUFFER_SIZE)) == -1)
+		{
+			free(buffer);
+			return (-1);
+		}
+		buffer[readvalue] = 0;
+		save[fd] = ft_strjoin(save[fd], buffer);
 	}
-	printf("save after : %s", csave[fd]);
-	printf("aled");
-	return(get_line(csave[fd], line, i));
+	free(buffer);
+	*line = fetch_line(save[fd]);
+	save[fd] = fetch_save(save[fd]);
+	if (readvalue == 0)
+		return (0);
+	return (1);
 }
