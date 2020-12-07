@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/07 15:59:53 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 16:46:54 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,18 @@ int get_next_line(int fd, char **line)
 
 	if (!(buffer = malloc(sizeof(char) * BUFFER_SIZE)))
 		return (-1);
-	if (BUFFER_SIZE <= 0)
+	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (-1);
-	// if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-	// 	return (-1);
 	buffer[0] = 0;
-	csave[fd] = ft_strjoin(csave[fd], buffer);
-	while ((i = get_ind(csave[fd])) != -1)
+	while (!csave[fd] || (i = get_ind(csave[fd])) != -1)
 	{
-		csave[fd] = ft_strjoin(csave[fd], buffer);
 		rbytes = read(fd, buffer, BUFFER_SIZE);
+		csave[fd] = ft_strjoin(csave[fd], buffer);
 		if (rbytes <= 0)
 			return (rbytes);
 		buffer[rbytes] = 0;
 	}
+	printf("save after : %s", csave[fd]);
+	printf("aled");
 	return(get_line(csave[fd], line, i));
 }
