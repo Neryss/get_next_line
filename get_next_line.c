@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 16:23:25 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 13:51:55 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int			get_line(char *actual, char **line, int i)
 	if (!(*line = malloc(sizeof(char) * (i + 1))))
 		return (-1);
 	*line = ft_substr(actual, 0, i);
+	i++;
 	len = ft_strlen(actual + i) + 1;
 	ft_memmove(actual, actual + i, len);
 	return (1);
@@ -79,12 +80,13 @@ int			get_line(char *actual, char **line, int i)
 int get_next_line(int fd, char **line)
 {
 	char			*buffer;
-	// static t_save	*save;
 	static	char	*csave[10240];
 	int				i;
 	int				rbytes;
 
 	if (!(buffer = malloc(sizeof(char) * BUFFER_SIZE)))
+		return (-1);
+	if (BUFFER_SIZE <= 0)
 		return (-1);
 	// if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 	// 	return (-1);
@@ -95,16 +97,6 @@ int get_next_line(int fd, char **line)
 		if ((i = get_ind(csave[fd])) != 0)
 			return(get_line(csave[fd], line, i));
 	}
-	*line = ft_strdup(csave[fd]);
-	if (i == 0 && *line)
-		return (0);
-	if (csave[fd] != NULL && !*line)
-	{
-		csave[fd] = NULL;
-		free(csave[fd]);
-		free(buffer);
-		return (1);
-	}
-	*line = ft_strdup("");
+		*line = ft_strdup(csave[fd]);
 	return (rbytes);
 }

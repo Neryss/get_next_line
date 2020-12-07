@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:24 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/04 16:16:27 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 13:24:27 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ char				*ft_strjoin(char const *s1, char const *s2)
 		fstr[i++] = 0;
 	fstr = ft_memcpy(fstr, s1, ft_strlen(s1));
 	fstr = ft_strcat(fstr, (char *)s2);
+	free((char *)s1);	//leaks maybe ?
 	return (fstr);
 }
 
