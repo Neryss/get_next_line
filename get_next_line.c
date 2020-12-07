@@ -6,7 +6,7 @@
 /*   By: ckurt <ckurt@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 11:06:22 by ckurt             #+#    #+#             */
-/*   Updated: 2020/12/07 13:51:55 by ckurt            ###   ########lyon.fr   */
+/*   Updated: 2020/12/07 15:59:53 by ckurt            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int			get_ind(char *actual)
 			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 int			get_line(char *actual, char **line, int i)
@@ -77,6 +77,13 @@ int			get_line(char *actual, char **line, int i)
 	return (1);
 }
 
+// ssize_t	read_wrapper(int fd, char *buf, size_t len)
+// {
+// 	printf("read was called!\n");
+
+// 	return read(fd, buf, len);
+// }
+
 int get_next_line(int fd, char **line)
 {
 	char			*buffer;
@@ -90,13 +97,15 @@ int get_next_line(int fd, char **line)
 		return (-1);
 	// if (!(*line = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 	// 	return (-1);
-	while ((rbytes = read(fd, buffer, BUFFER_SIZE)) > 0)
+	buffer[0] = 0;
+	csave[fd] = ft_strjoin(csave[fd], buffer);
+	while ((i = get_ind(csave[fd])) != -1)
 	{
-		buffer[rbytes] = 0;
 		csave[fd] = ft_strjoin(csave[fd], buffer);
-		if ((i = get_ind(csave[fd])) != 0)
-			return(get_line(csave[fd], line, i));
+		rbytes = read(fd, buffer, BUFFER_SIZE);
+		if (rbytes <= 0)
+			return (rbytes);
+		buffer[rbytes] = 0;
 	}
-		*line = ft_strdup(csave[fd]);
-	return (rbytes);
+	return(get_line(csave[fd], line, i));
 }
